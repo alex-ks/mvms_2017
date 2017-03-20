@@ -16,7 +16,7 @@ namespace mvms_2017
 	}
 
 	Komissarov_Alexander_201732140_Task1::Komissarov_Alexander_201732140_Task1(bool verbose) 
-		: Komissarov_Alexander_201732140_Task1(verbose)
+		: Task1(verbose)
 	{
 	
 	}
