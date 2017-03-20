@@ -1,9 +1,15 @@
-#include "Komissarov_Alexander_201732140_Task1.h"
+п»ї#include "Komissarov_Alexander_201732140_Task1.h"
 #include <stdexcept>
+#include <utility>
 
 namespace mvms_2017
 {
-	Komissarov_Alexander_201732140_Task1::Komissarov_Alexander_201732140_Task1() 
+	void Komissarov_Alexander_201732140_Task1::drawLine(cv::Mat &image, float x1, float y1, float x2, float y2) const
+	{
+		throw std::runtime_error("Not implemented");
+	}
+
+	Komissarov_Alexander_201732140_Task1::Komissarov_Alexander_201732140_Task1()
 		: Komissarov_Alexander_201732140_Task1(true)
 	{
 	
@@ -22,16 +28,26 @@ namespace mvms_2017
 
 	std::string Komissarov_Alexander_201732140_Task1::getFirstName()
 	{
-		return "Комиссаров";
+		return "РљРѕРјРёСЃСЃР°СЂРѕРІ";
 	}
 
 	std::string Komissarov_Alexander_201732140_Task1::getSecondName()
 	{
-		return "Александр";
+		return "РђР»РµРєСЃР°РЅРґСЂ";
 	}
 
-	cv::Mat Komissarov_Alexander_201732140_Task1::drawTriangle(std::string filename, float x1, float y1, float x2, float y2, float x3, float y3)
+	cv::Mat Komissarov_Alexander_201732140_Task1::drawTriangle(std::string filename, 
+															   float x1, 
+															   float y1, 
+															   float x2, 
+															   float y2, 
+															   float x3, 
+															   float y3)
 	{
-		throw std::runtime_error("Not implemented");
+		auto image = cv::imread(filename);
+		drawLine(image, x1, y1, x2, y2);
+		drawLine(image, x1, y1, x3, y3);
+		drawLine(image, x2, y2, x3, y3);
+		return std::move(image);
 	}
 }
