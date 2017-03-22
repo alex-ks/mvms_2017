@@ -3,10 +3,16 @@
 
 namespace mvms_2017
 {
+	struct Point
+	{
+		float x, y;
+	};
+
 	class Komissarov_Alexander_201732140_Task1 : public Task1
 	{
 	private:
-		void drawLine(cv::Mat &image, float x1, float y1, float x2, float y2) const;
+		int line_color = 0xFFFFFFFF;
+		void drawLine(cv::Mat &image, Point p1, Point p2) const;
 
 	public:
 		Komissarov_Alexander_201732140_Task1();

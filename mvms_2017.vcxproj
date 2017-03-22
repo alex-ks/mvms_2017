@@ -130,6 +130,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="pict.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\opencv3.1.redist.1.0\build\native\opencv3.1.redist.targets" Condition="Exists('packages\opencv3.1.redist.1.0\build\native\opencv3.1.redist.targets')" />
