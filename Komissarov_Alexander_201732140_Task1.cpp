@@ -7,9 +7,9 @@ namespace mvms_2017
 	void setRgb(cv::Mat &image, int x, int y, int value)
 	{
 		static int mask = 0xFF;
-		image.at<cv::Vec3b>(x, y)[2] = (value >> 16) & mask;
-		image.at<cv::Vec3b>(x, y)[1] = (value >> 8) & mask;
-		image.at<cv::Vec3b>(x, y)[0] = value & mask;
+		image.at<cv::Vec3b>(y, x)[2] = (value >> 16) & mask;
+		image.at<cv::Vec3b>(y, x)[1] = (value >> 8) & mask;
+		image.at<cv::Vec3b>(y, x)[0] = value & mask;
 	}
 
 	int signum(int x)
