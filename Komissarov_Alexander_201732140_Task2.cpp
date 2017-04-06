@@ -4,14 +4,14 @@
 
 namespace mvms_2017
 {
-	const std::array<std::array<int, 3>, 3> Komissarov_Alexander_201732140_Task2::DX =
+	const std::array<std::array<short, 3>, 3> Komissarov_Alexander_201732140_Task2::DX =
 	{{
 		{ -1, -2, -1 },
 		{  0,  0,  0 },
 		{  1,  2,  1 }
 	}};
 
-	const std::array<std::array<int, 3>, 3> Komissarov_Alexander_201732140_Task2::DY =
+	const std::array<std::array<short, 3>, 3> Komissarov_Alexander_201732140_Task2::DY =
 	{{
 		{ -1, 0, 1 },
 		{ -2, 0, 2 },
@@ -23,28 +23,25 @@ namespace mvms_2017
 		return value > 0 ? (value < 256 ? value : 255) : 0;
 	}
 
-	Rgb::Rgb(int r, int g, int b)
-	{
-		red = saturate(r);
-		green = saturate(g);
-		blue = saturate(b);
-	}
+	Rgb::Rgb(short r, short g, short b) : red(r), green(g), blue(b) { }
 
+	template <typename TValue>
 	Rgb getRgb(const cv::Mat &image, int x, int y)
 	{
 		return Rgb
 		{
-			image.at<cv::Vec3b>(y, x)[2],
-			image.at<cv::Vec3b>(y, x)[1],
-			image.at<cv::Vec3b>(y, x)[0]
+			image.at<cv::Vec<TValue, 3>>(y, x)[2],
+			image.at<cv::Vec<TValue, 3>>(y, x)[1],
+			image.at<cv::Vec<TValue, 3>>(y, x)[0]
 		};
 	}
 
+	template <typename TValue>
 	void setRgb(cv::Mat &image, int x, int y, Rgb value)
 	{
-		image.at<cv::Vec3b>(y, x)[2] = value.red;
-		image.at<cv::Vec3b>(y, x)[1] = value.green;
-		image.at<cv::Vec3b>(y, x)[0] = value.blue;
+		image.at<cv::Vec<TValue, 3>>(y, x)[2] = value.red;
+		image.at<cv::Vec<TValue, 3>>(y, x)[1] = value.green;
+		image.at<cv::Vec<TValue, 3>>(y, x)[0] = value.blue;
 	}
 
 	Rgb Komissarov_Alexander_201732140_Task2::convolution(cv::Mat image, 
@@ -59,9 +56,9 @@ namespace mvms_2017
 		{
 			for (int j = 0; j < kernel.size(); ++j)
 			{
-				auto dx = i - kernel[0].size() / 2;
-				auto dy = j - kernel.size() / 2;
-				auto value = getRgb(image, x + dx, y + dy);
+				int dx = i - kernel[0].size() / 2;
+				int dy = j - kernel.size() / 2;
+				auto value = getRgb<uchar>(image, x + dx, y + dy);
 				rsum += value.red * kernel[i][j];
 				gsum += value.green * kernel[i][j];
 				bsum += value.blue * kernel[i][j];
@@ -78,14 +75,14 @@ namespace mvms_2017
 		size.width -= kernel[0].size() - 1;
 		size.height -= kernel.size() - 1;
 
-		cv::Mat result(size, image.type());
+		cv::Mat result(size, CV_16SC3);
 
 		for (int x = 0; x < size.width; ++x)
 		{
 			for (int y = 0; y < size.height; ++y)
 			{
 				auto rgb = convolution(image, kernel, x + kernel[0].size() / 2, y + kernel.size() / 2);
-				setRgb(result, x, y, rgb);
+				setRgb<short>(result, x, y, rgb);
 			}
 		}
 

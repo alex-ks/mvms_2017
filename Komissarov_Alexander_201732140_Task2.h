@@ -6,17 +6,17 @@ namespace mvms_2017
 {
 	struct Rgb
 	{
-		unsigned char red, green, blue;
-		Rgb(int r, int g, int b);
+		short red, green, blue;
+		Rgb(short r, short g, short b);
 	};
 
 	class Komissarov_Alexander_201732140_Task2 : public Task2
 	{
 	private:
-		static const std::array<std::array<int, 3>, 3> DX, DY;
+		static const std::array<std::array<short, 3>, 3> DX, DY;
 
 	public:
-		using Kernel = std::array<std::array<int, 3>, 3>;
+		using Kernel = std::array<std::array<short, 3>, 3>;
 
 		Komissarov_Alexander_201732140_Task2();
 		Komissarov_Alexander_201732140_Task2(bool verbose);
