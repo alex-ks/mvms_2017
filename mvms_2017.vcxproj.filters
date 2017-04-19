@@ -39,6 +39,9 @@
     <ClInclude Include="Komissarov_Alexander_201732140_Task2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Komissarov_Alexander_201732140_Task3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -63,6 +66,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Komissarov_Alexander_201732140_Task2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Komissarov_Alexander_201732140_Task3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
