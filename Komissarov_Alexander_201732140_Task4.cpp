@@ -11,6 +11,7 @@ namespace mvms_2017
     {
         cv::Mat blurred;
         cv::GaussianBlur(grayimage, blurred, cv::Size(3, 3), 0);
+        auto size = blurred.size();
 
         cv::Mat result(pts.size(), pattern.size(), CV_8U);
         
@@ -21,15 +22,15 @@ namespace mvms_2017
                 auto p1 = pts[i] + pattern[j].first;
                 auto p2 = pts[i] + pattern[j].second;
 
-                if (!(0 <= p1.x && p1.x < pts.size()
-                    && 0 <= p1.y && p1.y < pattern.size()))
+                if (!(0 <= p1.x && p1.x < size.width
+                    && 0 <= p1.y && p1.y < size.height))
                     p1 = pts[i];
 
-                if (!(0 <= p2.x && p2.x < pts.size()
-                    && 0 <= p2.y && p2.y < pattern.size()))
+                if (!(0 <= p2.x && p2.x < size.width
+                    && 0 <= p2.y && p2.y < size.height))
                     p2 = pts[i];
 
-                if (blurred.at<uchar>(pts[i] + pattern[j].first) < blurred.at<uchar>(pts[i] + pattern[j].second))
+                if (blurred.at<uchar>(p1) < blurred.at<uchar>(p2))
                     result.at<uchar>(i, j) = 1;
                 else
                     result.at<uchar>(i, j) = 0;

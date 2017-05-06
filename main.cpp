@@ -13,21 +13,23 @@ int main(int argc, char *argv[])
         mvms_2017::Komissarov_Alexander_201732140_Task4 task4;
 		auto pict = cv::imread("pict3.png");
 		auto size = pict.size();
-
         cv::cvtColor(pict, pict, cv::COLOR_RGB2GRAY);
+        pict.at<uchar>(size.height - 1, size.width - 1); // ok, matrix notation
+        pict.at<uchar>({ size.width - 1, size.height - 1 }); // ok, reversed order
 
         auto result = task4.brief(pict, 
-                                  { {50, 50}, {70, 70}, {120, 160} }, 
+                                  { {50, 50}, {70, 70}, {120, 160}, {size.width - 1, size.height - 1} }, 
                                   { { {-1, -1}, {1, 1} }, { {-1, 1}, {1, -1} } });
 
 		cv::imshow("Pict", pict);
-        cv::Mat blurred;
+        cv::Mat blurred(size, pict.type());
         cv::GaussianBlur(pict, blurred, { 3, 3 }, 0);
+        blurred.at<uchar>({ size.height - 1, size.width - 1 });
         cv::imshow("Blurred", blurred);
-
+        
 		cv::waitKey(0);
     }
-    catch (std::exception ex)
+    catch (const std::exception &ex)
 	{
         std::cout << ex.what() << std::endl;
 		system("pause");
