@@ -1,6 +1,7 @@
 #include "Komissarov_Alexander_201732140_Task1.h"
 #include "Komissarov_Alexander_201732140_Task2.h"
 #include "Komissarov_Alexander_201732140_Task3.h"
+#include "Komissarov_Alexander_201732140_Task4.h"
 
 int main(int argc, char *argv[])
 {
@@ -9,18 +10,20 @@ int main(int argc, char *argv[])
 		mvms_2017::Komissarov_Alexander_201732140_Task1 task1;
 		mvms_2017::Komissarov_Alexander_201732140_Task2 task2;
         mvms_2017::Komissarov_Alexander_201732140_Task3 task3;
+        mvms_2017::Komissarov_Alexander_201732140_Task4 task4;
 		auto pict = cv::imread("pict3.png");
 		auto size = pict.size();
 
         cv::cvtColor(pict, pict, cv::COLOR_RGB2GRAY);
 
-        cv::Mat reference;
-        cv::adaptiveThreshold(pict, reference, 255, CV_ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, 5, 7);
-        cv::imshow("Reference", reference);
-		
-        auto result = task3.adaptiveBinary(pict, 5, 7);
+        auto result = task4.brief(pict, 
+                                  { {50, 50}, {70, 70}, {120, 160} }, 
+                                  { { {-1, -1}, {1, 1} }, { {-1, 1}, {1, -1} } });
 
-		cv::imshow("Pict", result);
+		cv::imshow("Pict", pict);
+        cv::Mat blurred;
+        cv::GaussianBlur(pict, blurred, { 3, 3 }, 0);
+        cv::imshow("Blurred", blurred);
 
 		cv::waitKey(0);
     }

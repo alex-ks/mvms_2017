@@ -42,6 +42,9 @@
     <ClInclude Include="Komissarov_Alexander_201732140_Task3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Komissarov_Alexander_201732140_Task4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -71,12 +74,18 @@
     <ClCompile Include="Komissarov_Alexander_201732140_Task3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Komissarov_Alexander_201732140_Task4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="pict.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="pict3.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
