@@ -1,9 +1,12 @@
 ﻿#include "Komissarov_Alexander_201732140_Task4.h"
+#include <cmath>
 
 namespace mvms_2017
 {
     using std::vector;
     using std::pair;
+
+    static const int BYTE_SIZE = 8;
 
     cv::Mat Komissarov_Alexander_201732140_Task4::brief(cv::Mat grayimage, 
                                                         vector<cv::Point2i> pts, 
@@ -13,7 +16,13 @@ namespace mvms_2017
         cv::GaussianBlur(grayimage, blurred, cv::Size(3, 3), 0);
         auto size = blurred.size();
 
-        cv::Mat result(pts.size(), pattern.size(), CV_8U);
+        auto column_count = pattern.size() % BYTE_SIZE == 0 ? 
+                            pattern.size() / BYTE_SIZE : 
+                            pattern.size() / BYTE_SIZE + 1;
+        auto rest = pattern.size() % BYTE_SIZE;
+
+        cv::Mat result(pts.size(), column_count, CV_8U);
+        uchar byte = 0;
         
         for (int i = 0; i < pts.size(); ++i)
         {
@@ -31,10 +40,16 @@ namespace mvms_2017
                     p2 = pts[i];
 
                 if (blurred.at<uchar>(p1) < blurred.at<uchar>(p2))
-                    result.at<uchar>(i, j) = 1;
+                    byte = (byte << 1) + 1;
                 else
-                    result.at<uchar>(i, j) = 0;
+                    byte <<= 1;
+
+                if (j % BYTE_SIZE == BYTE_SIZE - 1)
+                    result.at<uchar>(i, j / BYTE_SIZE) = byte;
             }
+
+            if (rest != 0)
+                result.at<uchar>(i, column_count - 1) = byte << (BYTE_SIZE - rest);
         }
 
         return std::move(result);
