@@ -115,6 +115,7 @@
     <ClInclude Include="Komissarov_Alexander_201732140_Task2.h" />
     <ClInclude Include="Komissarov_Alexander_201732140_Task3.h" />
     <ClInclude Include="Komissarov_Alexander_201732140_Task4.h" />
+    <ClInclude Include="Komissarov_Alexander_201732140_Task5.h" />
     <ClInclude Include="task1.h" />
     <ClInclude Include="task2.h" />
     <ClInclude Include="task3.h" />
@@ -126,6 +127,7 @@
     <ClCompile Include="Komissarov_Alexander_201732140_Task2.cpp" />
     <ClCompile Include="Komissarov_Alexander_201732140_Task3.cpp" />
     <ClCompile Include="Komissarov_Alexander_201732140_Task4.cpp" />
+    <ClCompile Include="Komissarov_Alexander_201732140_Task5.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="task1.cpp" />
     <ClCompile Include="task2.cpp" />
