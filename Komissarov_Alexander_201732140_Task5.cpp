@@ -2,21 +2,6 @@
 #include <stdexcept>
 #include <cassert>
 
-#include <iostream>
-
-static void print_mat(cv::Mat matrix)
-{
-    auto size = matrix.size();
-    for (int row = 0; row < size.height; ++row)
-    {
-        for (int column = 0; column < size.width; ++column)
-        {
-            std::cout << matrix.at<float>(row, column) << ' ';
-        }
-        std::cout << std::endl;
-    }
-}
-
 namespace mvms_2017
 {
     inline float get_component(cv::Point3f point, int i)
@@ -33,6 +18,7 @@ namespace mvms_2017
             return 1;
         default:
             assert(false && "Index out of range");
+            return -1;
         }
     }
 
@@ -52,12 +38,14 @@ namespace mvms_2017
                 left.at<float>(2 * i + 1, j + 8) = -img_pts[i].x * get_component(real_pts[i], j);
             }
         }
-        std::cout << "left" << std::endl;
-        print_mat(left);
 
         cv::Mat result;
         cv::SVD::solveZ(left, result);
-        return result.reshape(0, 3);
+        result = result.reshape(0, 3);
+
+        auto point = real_pts.back();
+        cv::Mat scale = result.row(2) * (cv::Mat_<float>(4, 1) << point.x, point.y, point.z, 1);
+        return result / scale.at<float>(0, 0);
     }
 
     Komissarov_Alexander_201732140_Task5::Komissarov_Alexander_201732140_Task5() : Task5(true) { }

@@ -1,10 +1,9 @@
-#include "Komissarov_Alexander_201732140_Task1.h"
-#include "Komissarov_Alexander_201732140_Task2.h"
-#include "Komissarov_Alexander_201732140_Task3.h"
-#include "Komissarov_Alexander_201732140_Task4.h"
 #include "Komissarov_Alexander_201732140_Task5.h"
 
 #include <iostream>
+
+using std::cout;
+using std::endl;
 
 static void print_mat(cv::Mat matrix)
 {
@@ -19,38 +18,91 @@ static void print_mat(cv::Mat matrix)
     }
 }
 
+cv::Mat projectPoints(cv::Mat camera_mat, std::vector<cv::Point3f> &real_points, bool verbose = false)
+{
+    cv::Mat world_points(real_points.size(), 3, CV_32FC1, real_points.data());
+    cv::hconcat(world_points, cv::Mat::ones(real_points.size(), 1, CV_32FC1), world_points);
+    
+    if (verbose)
+    {
+        cout << "World points" << endl;
+        print_mat(cv::Mat(world_points));
+    }
+
+    return (camera_mat * world_points.t()).t();
+}
+
+template <typename T>
+std::vector<cv::Point_<T>> matToPoints(cv::Mat projected)
+{
+    std::vector<cv::Point_<T>> img_points;
+
+    for (int i = 0; i < projected.rows; ++i)
+    {
+        img_points.push_back(
+        { 
+            (T)(projected.at<float>(i, 0) / projected.at<float>(i, 2)), 
+            (T)(projected.at<float>(i, 1) / projected.at<float>(i, 2))
+        });
+    }
+
+    return std::move(img_points);
+}
+
+template <typename T>
+void printPoints(const std::vector<cv::Point_<T>> &img_points)
+{
+    for (auto point : img_points)
+    {
+        cout << "{ x: " << point.x << ", y: " << point.y << " }" << endl;
+    }
+}
+
 int main(int argc, char *argv[])
 {
     try
 	{
-		mvms_2017::Komissarov_Alexander_201732140_Task1 task1;
-		mvms_2017::Komissarov_Alexander_201732140_Task2 task2;
-        mvms_2017::Komissarov_Alexander_201732140_Task3 task3;
-        mvms_2017::Komissarov_Alexander_201732140_Task4 task4;
         mvms_2017::Komissarov_Alexander_201732140_Task5 task5;
 		auto pict = cv::imread("pict3.png");
 		auto size = pict.size();
 
-        auto result = task5.getProjectionMatrix({ {1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6} },
-                                                { {-3.f / 7 * 2 - 3, -3.f / 7 * 2 - 3, 9}, 
-                                                  {-2.f / 7 * 3 - 2, -2.f / 7 * 3 - 2, 10}, 
-                                                  {-1.f / 7 * 4 - 1, -1.f / 7 * 4 - 1,11},
-                                                  {1.f / 7 * 5 + 1,1.f / 7 * 5 + 1, 12}, 
-                                                  {2.f / 7 * 6 + 2, 2.f / 7 * 6 + 2, 13}, 
-                                                  {6, 6, 14} });
-        cv::Mat X(cv::Matx<float, 4, 1>(6, 6, 14, 1));
-        cv::Mat projected = result * X;
+        std::vector<cv::Point3f> real_points = { {1, 1, 1}, {1, 2, 0}, {-1, 0, 0}, {2, 1, 2}, {-1, -1, 5}, {2, 2, 6} };
+        cv::Mat camera_mat(cv::Matx<float, 3, 4>
+        { 
+            1, 0, 0.1f, 0, 
+            0, 1, 0, 0,
+            0, 0, 0, 1
+        });
+        cout << "Camera mat" << endl;
+        print_mat(cv::Mat(camera_mat));
 
-        std::cout << "Mat" << std::endl;
+        auto projected = projectPoints(camera_mat, real_points);
+        cout << "Projected" << endl;
+        print_mat(cv::Mat(projected));
+
+        auto img_points = matToPoints<int>(projected);
+
+        cout << "Image points" << endl;
+        printPoints(img_points);
+
+        auto result = task5.getProjectionMatrix(img_points, real_points);
+
+        cv::Mat diff;
+        cv::absdiff(camera_mat, result, diff);
+
+        if (cv::sum(diff)[0] < 1.)
+            cout << "True" << endl;
+        else
+            cout << "False" << endl;
+
+        cout << "Rebuilt camera mat" << endl;
         print_mat(result);
-        std::cout << "X" << std::endl;
-        print_mat(X);
-        std::cout << "x" << std::endl;
-        print_mat(projected);
 
-        //cv::imshow("Blurred", pict);
-        
-		//cv::waitKey(0);
+        auto projected_again = projectPoints(result, real_points);
+        cout << "Projected again mat" << endl;
+        print_mat(projected_again);
+        auto img_points2 = matToPoints<int>(projected_again);
+        printPoints(img_points2);
         system("pause");
     }
     catch (const std::exception &ex)
