@@ -1,6 +1,7 @@
 ﻿#include "Komissarov_Alexander_201732140_Task5.h"
 #include <stdexcept>
 #include <cassert>
+#include <algorithm>
 
 namespace mvms_2017
 {
@@ -22,6 +23,12 @@ namespace mvms_2017
         }
     }
 
+    inline float calcW(cv::Mat proj, cv::Point3f point)
+    {
+        cv::Mat scale = proj.row(2) * (cv::Mat_<float>(4, 1) << point.x, point.y, point.z, 1);
+        return scale.at<float>(0, 0);
+    }
+
     cv::Mat Komissarov_Alexander_201732140_Task5::getProjectionMatrix(std::vector<cv::Point2i> img_pts, std::vector<cv::Point3f> real_pts)
     {
         const int count = 6;
@@ -33,19 +40,26 @@ namespace mvms_2017
                 left.at<float>(2 * i, j) = 0;
                 left.at<float>(2 * i, j + 4) = -get_component(real_pts[i], j);
                 left.at<float>(2 * i, j + 8) = img_pts[i].y * get_component(real_pts[i], j);
+
                 left.at<float>(2 * i + 1, j) = get_component(real_pts[i], j);
                 left.at<float>(2 * i + 1, j + 4) = 0;
                 left.at<float>(2 * i + 1, j + 8) = -img_pts[i].x * get_component(real_pts[i], j);
             }
         }
 
-        cv::Mat result;
-        cv::SVD::solveZ(left, result);
+        for (int i = 0; i < left.cols; ++i)
+            left.at<float>(left.rows - 1, i) = 0;
+        left.at<float>(left.rows - 1, left.cols - 1) = 1;
+
+        cv::Mat result(cv::Vec<float, 12>(0.f));
+        result.at<float>(left.rows - 1, 0) = 1;
+        
+        cv::solve(left, result, result);
         result = result.reshape(0, 3);
 
-        auto point = real_pts.back();
-        cv::Mat scale = result.row(2) * (cv::Mat_<float>(4, 1) << point.x, point.y, point.z, 1);
-        return result / scale.at<float>(0, 0);
+        auto scale = calcW(result, real_pts.back());
+
+        return result / scale;
     }
 
     Komissarov_Alexander_201732140_Task5::Komissarov_Alexander_201732140_Task5() : Task5(true) { }

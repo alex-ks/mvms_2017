@@ -18,7 +18,7 @@ public:
      * \param real_pts точки в 3Д пространстве в С.К. камеры
      * \return матрица проекции
      */
-    cv::Mat getProjectionMatrix(std::vector<cv::Point2i> img_pts,std::vector<cv::Point3f> real_pts);
+    virtual cv::Mat getProjectionMatrix(std::vector<cv::Point2i> img_pts,std::vector<cv::Point3f> real_pts);
 
     /*!
      * \brief calibrateCamera Калибровка камеры методами OpenCV на вход серия изображений шахматной доски, на выход координаты камеры в С.К. доски. Нарисовать оси С.К. доски на изображении.

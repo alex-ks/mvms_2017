@@ -58,7 +58,7 @@ void printPoints(const std::vector<cv::Point_<T>> &img_points)
     }
 }
 
-int main(int argc, char *argv[])
+int main1(int argc, char *argv[])
 {
     try
 	{
@@ -112,4 +112,60 @@ int main(int argc, char *argv[])
     }
 
     return 0;
+}
+
+bool CheckProjectionMatrix(mvms_2017::Task5* t)
+{
+    std::vector<cv::Point2i> img_pts;
+    std::vector<cv::Point3f> world_pts;
+
+    world_pts.push_back(cv::Point3f(1, 1, 1));
+    world_pts.push_back(cv::Point3f(1, 2, 0));
+    world_pts.push_back(cv::Point3f(-1, 0, 0));
+    world_pts.push_back(cv::Point3f(2, 1, 2));
+    world_pts.push_back(cv::Point3f(-1, -1, 5));
+    world_pts.push_back(cv::Point3f(2, 2, 6));
+
+    cv::Mat W = cv::Mat(world_pts.size(), 3, CV_32FC1, world_pts.data());
+    cv::Mat gt = (cv::Mat_<float>(3, 4) << 
+        1, 0, 0.1, 0,
+        0, 1, 0, 0,
+        0, 0, 0, 1);
+
+    cout << cv::norm(gt.reshape(0, 12)) << endl;
+
+    cv::hconcat(W, cv::Mat::ones(world_pts.size(), 1, CV_32FC1), W);
+    cv::Mat R = gt*W.t();
+    R = R.t();
+
+    for (int i = 0; i<R.rows; i++) 
+    {
+        img_pts.push_back(cv::Point2f(R.row(i).at<float>(0), R.row(i).at<float>(1)));
+    }
+
+    cv::Mat d = gt;
+    if (t) {
+        d = t->getProjectionMatrix(img_pts, world_pts);
+        print_mat(d);
+    }
+
+    cv::absdiff(gt, d, gt);
+
+    auto result = cv::sum(gt)[0];
+    cout << result << endl;
+
+    if (result < 1.)
+        return true;
+
+    return false;
+}
+
+int main()
+{
+    mvms_2017::Komissarov_Alexander_201732140_Task5 task5;
+    if (CheckProjectionMatrix(&task5))
+        cout << "True" << endl;
+    else
+        cout << "False" << endl;
+    return system("pause");
 }
